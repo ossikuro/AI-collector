@@ -28,8 +28,8 @@
 }
 
 .category {
-  padding: 4px 8px;
-  border-radius: 999px;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-pill);
   font-size: 13px;
   color: var(--color-green-100);
   background: var(--color-green-10);
