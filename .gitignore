@@ -15,6 +15,7 @@ dist
 dist-ssr
 dist-electron
 out
+release/
 
 # Test reports
 coverage

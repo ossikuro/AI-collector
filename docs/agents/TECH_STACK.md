@@ -235,7 +235,30 @@ ComponentName.module.scss
 --color-black-60: rgba(0, 0, 0, 0.6);
 --color-black-10: rgba(0, 0, 0, 0.1);
 --color-black-05: rgba(0, 0, 0, 0.05);
+
+--color-white-100: rgba(255, 255, 255, 1);
+--color-white-80: rgba(255, 255, 255, 0.8);
+--color-white-96: rgba(255, 255, 255, 0.96);
 ```
+
+Общие расстояния и скругления держать в `variables.scss`:
+
+```scss
+--radius-md: 12px;
+--radius-lg: 16px;
+--radius-pill: 999px;
+
+--space-xs: 4px;
+--space-sm: 8px;
+--space-control-sm: 12px;
+--space-md: 16px;
+--space-lg: 24px;
+--space-xl: 32px;
+
+--app-min-width: 360px;
+```
+
+Минимальный размер экрана для приложения — 360px. Ниже этого приложение не сжимать.
 
 Пока не используем:
 

@@ -161,14 +161,28 @@ assets/
 ```txt
 src/app/pages/Dashboard/Dashboard.tsx
 src/app/pages/Dashboard/Dashboard.module.scss
+src/app/components/Header/Header.tsx
+src/app/components/Header/Header.module.scss
 src/app/components/ProviderCard/ProviderCard.tsx
 src/app/components/ProviderCard/ProviderCard.module.scss
+src/assets/SV{}ISOROKI.svg
 src/providers/index.ts
 ```
 
 `src/providers/index.ts` — временный список провайдеров для UI.
 
 Важно: пока не импортировать `provider.json` напрямую в TypeScript.
+
+Текущий Dashboard уже показывает:
+
+- верхнюю шапку `Header`;
+- логотип `svoi.soroki`;
+- placeholder будущего поиска `Поиск`;
+- кнопки `Добавить`, `Статистика`, `Настройки`, `Открыть все`;
+- список карточек провайдеров;
+- карточку Kling.
+
+Кнопки и поиск пока без действий.
 
 ---
 
@@ -207,11 +221,31 @@ import './app/styles/index.scss';
 
 --color-white-100: rgba(255, 255, 255, 1);
 --color-white-80: rgba(255, 255, 255, 0.8);
+--color-white-96: rgba(255, 255, 255, 0.96);
 
 --color-green-100: rgba(16, 163, 127, 1);
 --color-green-80: rgba(16, 163, 127, 0.8);
 --color-green-10: rgba(16, 163, 127, 0.1);
 ```
+
+Общие расстояния, скругления и минимальная ширина также лежат в `variables.scss`:
+
+```scss
+--radius-md: 12px;
+--radius-lg: 16px;
+--radius-pill: 999px;
+
+--space-xs: 4px;
+--space-sm: 8px;
+--space-control-sm: 12px;
+--space-md: 16px;
+--space-lg: 24px;
+--space-xl: 32px;
+
+--app-min-width: 360px;
+```
+
+Минимальный размер экрана приложения — 360px. Ниже этого приложение не сжимать.
 
 Пока не создавать `mixins.scss` и `functions.scss`. Добавить позже, если появится реальная потребность.
 
@@ -342,11 +376,7 @@ selectors.json
 
 ```ts
 type AccountStatus =
-  | 'not_connected'
-  | 'connected'
-  | 'session_expired'
-  | 'manual_required'
-  | 'error';
+  'not_connected' | 'connected' | 'session_expired' | 'manual_required' | 'error';
 ```
 
 ---
@@ -397,15 +427,10 @@ Provider Registry пока не реализован кодом.
 
 ---
 
-## Следующая задача для агента
+## Текущий фокус для агента
 
-Продолжать от текущего UI:
+Первый Dashboard и Header уже приняты и слиты в `main`.
 
-1. Проверить/дописать `src/providers/index.ts` с временным массивом `Provider[]`.
-2. Проверить/дописать `ProviderCard.tsx` и `ProviderCard.module.scss`.
-3. Проверить/дописать `Dashboard.tsx` и `Dashboard.module.scss`.
-4. Подключить `Dashboard` в `App.tsx`.
-5. Запустить `npm run dev`.
-6. Если UI открывается — следующим коммитом зафиксировать первый Dashboard.
+Дальше двигаться маленькими UI-шагами от текущего Dashboard.
 
-Пока не переходить к Provider Registry, Playwright, аккаунтам, storage и Electron IPC.
+Пока не переходить к Provider Registry, Playwright, аккаунтам, storage и Electron IPC без отдельной задачи.

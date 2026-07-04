@@ -79,10 +79,12 @@ Explain code in beginner-friendly Russian when the user asks “что это з
 
 Additional project notes live in:
 
-- `docs/agent/PROJECT_STATE.md`
-- `docs/agent/PROJECT_STRUCTURE.md`
-- `docs/agent/TECH_STACK.md`
-- `docs/agent/PACKAGE_NOTES.md`
-- `docs/agent/PROJECT_COMMANDS.md`
+- `docs/agents/PROJECT_STATE.md`
+- `docs/agents/PROJECT_STRUCTURE.md`
+- `docs/agents/TECH_STACK.md`
+- `docs/agents/PACKAGE_NOTES.md`
+- `docs/agents/PROJECT_COMMANDS.md`
+- `docs/agents/CODEX_CONTEXT.md`
+- `docs/agents/USER_SETUP.md`
 
 Read them before large changes.

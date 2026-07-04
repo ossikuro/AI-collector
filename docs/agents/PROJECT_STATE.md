@@ -75,6 +75,8 @@ npm install -D sass-embedded
 ```txt
 src/app/pages/Dashboard/Dashboard.tsx
 src/app/pages/Dashboard/Dashboard.module.scss
+src/app/components/Header/Header.tsx
+src/app/components/Header/Header.module.scss
 src/app/components/ProviderCard/ProviderCard.tsx
 src/app/components/ProviderCard/ProviderCard.module.scss
 src/providers/index.ts
@@ -83,9 +85,12 @@ src/providers/index.ts
 Текущая идея:
 
 - `Dashboard` показывает список AI-сервисов;
+- `Header` показывает верхнюю шапку Dashboard;
 - `ProviderCard` показывает карточку одного сервиса;
 - `src/providers/index.ts` временно хранит массив `Provider[]` для UI;
 - пока показываем Kling;
+- в `Header` есть логотип `svoi.soroki`, placeholder `Поиск` и кнопки `Добавить`, `Статистика`, `Настройки`, `Открыть все`;
+- кнопки в `Header` пока без действий, фильтрация/поиск пока не реализованы;
 - кнопка `Open` пока без действия;
 - статус пока статичный: `Not connected`.
 
@@ -118,6 +123,9 @@ import './app/styles/index.scss';
 - минималистичный дизайн в духе ChatGPT;
 - цвета через CSS variables и `rgba`;
 - в названии цвета указывать процент прозрачности;
+- общие расстояния держать в `--space-*`;
+- общие скругления держать в `--radius-*`;
+- минимальная ширина приложения: `--app-min-width: 360px`;
 - использовать CSS Modules + SCSS для компонентов;
 - `mixins.scss` и `functions.scss` пока не создавать.
 
@@ -250,24 +258,30 @@ npm install -D sass-embedded
 
 ---
 
-## Текущий практический шаг
+## Текущий практический статус UI
 
-Довести первый простой UI с временным массивом провайдеров в `.ts`.
+Первый Dashboard собран и подключён.
 
-Проверить, что есть и корректно работает:
+Сейчас есть:
 
 ```txt
 src/providers/index.ts
 src/app/pages/Dashboard/Dashboard.tsx
 src/app/pages/Dashboard/Dashboard.module.scss
+src/app/components/Header/Header.tsx
+src/app/components/Header/Header.module.scss
 src/app/components/ProviderCard/ProviderCard.tsx
 src/app/components/ProviderCard/ProviderCard.module.scss
 src/App.tsx
 ```
 
-Цель:
+Что уже есть на экране:
 
 - показать карточку Kling на экране;
+- показать шапку Dashboard;
+- использовать логотип `src/assets/SV{}ISOROKI.svg`;
+- держать placeholder `Поиск` без настоящей фильтрации;
+- держать кнопки шапки без действий;
 - использовать тип `Provider`;
 - не подключать пока чтение JSON;
 - не реализовывать пока полноценный Provider Registry;
@@ -277,13 +291,9 @@ src/App.tsx
 
 ## Следующая продуктовая задача
 
-Собрать MVP-экран Dashboard:
+Продолжать развивать Dashboard маленькими UI-шагами.
 
-- список AI-сервисов;
-- карточка сервиса;
-- кнопка `Open`;
-- статус аккаунта;
-- заготовка для подключения аккаунта.
+Не переходить к Provider Registry, Playwright, аккаунтам, storage и Electron IPC без отдельной задачи.
 
 ---
 
@@ -292,10 +302,10 @@ src/App.tsx
 Позже добавить остальные типы:
 
 ```ts
-ServiceAccount
-AccountStatus
-DailyCheck
-AutomationStep
+ServiceAccount;
+AccountStatus;
+DailyCheck;
+AutomationStep;
 ```
 
 И положить их в:
@@ -304,4 +314,4 @@ AutomationStep
 src/core/types/
 ```
 
-Но не переходить к этому, пока первый Dashboard не зафиксирован.
+Но не переходить к этому без отдельной задачи: первый Dashboard уже зафиксирован, следующий шаг должен быть осознанным.

@@ -32,7 +32,6 @@ src/
   App.tsx
   main.tsx
   App.css
-  index.css
   vite-env.d.ts
 
   app/
@@ -49,6 +48,10 @@ src/
         Dashboard.module.scss
 
     components/
+      Header/
+        Header.tsx
+        Header.module.scss
+
       ProviderCard/
         ProviderCard.tsx
         ProviderCard.module.scss
@@ -69,6 +72,9 @@ src/
     kling/
       provider.json
 
+  assets/
+    SV{}ISOROKI.svg
+
 public/
 
 package.json
@@ -82,7 +88,9 @@ electron-builder.json5
 README.md
 ```
 
-Если `App.css` и `index.css` больше не используются после подключения `src/app/styles/index.scss`, их можно оставить временно, но не импортировать в `main.tsx` и `App.tsx`.
+`App.css` пока остаётся файлом шаблона и импортируется в `src/App.tsx`.
+
+Глобальные стили проекта подключены через `src/app/styles/index.scss` в `src/main.tsx`.
 
 ---
 
@@ -230,7 +238,7 @@ import './app/styles/index.scss';
 
 ### variables.scss
 
-CSS variables: цвета, радиусы, отступы.
+CSS variables: цвета, радиусы, отступы и минимальная ширина приложения.
 
 Цвета задавать через `rgba`, в названии указывать прозрачность:
 
@@ -240,11 +248,31 @@ CSS variables: цвета, радиусы, отступы.
 --color-black-60: rgba(0, 0, 0, 0.6);
 --color-black-10: rgba(0, 0, 0, 0.1);
 --color-black-05: rgba(0, 0, 0, 0.05);
+--color-white-96: rgba(255, 255, 255, 0.96);
 ```
+
+Текущие общие tokens:
+
+```scss
+--radius-md: 12px;
+--radius-lg: 16px;
+--radius-pill: 999px;
+
+--space-xs: 4px;
+--space-sm: 8px;
+--space-control-sm: 12px;
+--space-md: 16px;
+--space-lg: 24px;
+--space-xl: 32px;
+
+--app-min-width: 360px;
+```
+
+Для новых компонентов использовать существующие переменные. Новые переменные добавлять в `variables.scss`, если значение становится общим для UI.
 
 ### typography.scss
 
-Базовые шрифты, цвет текста, фон, настройки форм.
+Базовые шрифты, цвет текста, фон, настройки форм и минимальная ширина `html`, `body`, `#root`.
 
 ---
 
@@ -261,10 +289,38 @@ Dashboard.module.scss
 
 Отвечает за:
 
+- подключение верхней шапки `Header`;
 - заголовок приложения;
 - краткое описание;
 - список карточек AI-сервисов;
 - вывод данных из временного массива `providers`.
+
+---
+
+## src/app/components/Header/
+
+Верхняя шапка Dashboard.
+
+Файлы:
+
+```txt
+Header.tsx
+Header.module.scss
+```
+
+Отвечает за:
+
+- логотип/название `svoi.soroki` через `src/assets/SV{}ISOROKI.svg`;
+- неактивный placeholder будущего поиска с текстом `Поиск`;
+- кнопки `Добавить`, `Статистика`, `Настройки`, `Открыть все`;
+- `aria-label` для кнопок.
+
+Важно:
+
+- поиск/фильтрация пока не реализованы;
+- кнопки пока без обработчиков;
+- иконки сделаны inline SVG, без новой UI/icon-библиотеки;
+- шапка адаптивная, минимальная ширина приложения 360px.
 
 ---
 
@@ -318,7 +374,7 @@ Provider
 Сейчас используются категории:
 
 ```ts
-'chat' | 'image' | 'video' | 'audio' | 'other'
+'chat' | 'image' | 'video' | 'audio' | 'other';
 ```
 
 Категория `code` пока не используется, потому что на MVP кодовые AI-сервисы считаются частью `chat` или `other`.
@@ -332,7 +388,7 @@ Provider
 Например, один сервис может быть одновременно:
 
 ```ts
-['chat', 'image']
+['chat', 'image'];
 ```
 
 ---
@@ -415,12 +471,10 @@ src/core/automation/
 src/core/checker/
 src/core/storage/
 src/core/logger/
-src/assets/
 examples/
-docs/agents/
 ```
 
-`src/app/` уже используется, потому что появился первый UI.
+`src/app/`, `src/assets/` и `docs/agents/` уже используются.
 
 ---
 

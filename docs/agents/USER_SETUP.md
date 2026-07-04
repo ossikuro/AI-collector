@@ -134,7 +134,7 @@ test-results
 
 ## Текущая структура UI
 
-Уже созданы или должны быть созданы:
+Уже созданы:
 
 ```txt
 src/app/styles/index.scss
@@ -146,11 +146,24 @@ src/app/styles/typography.scss
 src/app/pages/Dashboard/Dashboard.tsx
 src/app/pages/Dashboard/Dashboard.module.scss
 
+src/app/components/Header/Header.tsx
+src/app/components/Header/Header.module.scss
+
 src/app/components/ProviderCard/ProviderCard.tsx
 src/app/components/ProviderCard/ProviderCard.module.scss
 
+src/assets/SV{}ISOROKI.svg
 src/providers/index.ts
 ```
+
+Dashboard уже показывает:
+
+- верхнюю шапку с логотипом `svoi.soroki`;
+- placeholder будущего поиска `Поиск`;
+- кнопки `Добавить`, `Статистика`, `Настройки`, `Открыть все`;
+- карточку провайдера Kling.
+
+Поиск, настройки, статистика, добавление и открытие всех пока без действий.
 
 ---
 
@@ -184,6 +197,25 @@ import './app/styles/index.scss';
 --color-black-05: rgba(0, 0, 0, 0.05);
 ```
 
+Общие отступы, скругления и минимальная ширина приложения лежат в `variables.scss`:
+
+```scss
+--radius-md: 12px;
+--radius-lg: 16px;
+--radius-pill: 999px;
+
+--space-xs: 4px;
+--space-sm: 8px;
+--space-control-sm: 12px;
+--space-md: 16px;
+--space-lg: 24px;
+--space-xl: 32px;
+
+--app-min-width: 360px;
+```
+
+Минимальная ширина приложения — 360px.
+
 Пока не создавать:
 
 ```txt
@@ -207,6 +239,7 @@ functions.scss
 src/app/
 src/core/
 src/providers/
+src/assets/
 ```
 
 ---
@@ -298,11 +331,9 @@ Unable to find the Biome binary
 
 ## Следующий шаг
 
-Довести первый Dashboard:
+Продолжать развивать Dashboard маленькими UI-шагами:
 
-- проверить `src/providers/index.ts`;
-- проверить `ProviderCard.tsx`;
-- проверить `Dashboard.tsx`;
-- подключить `Dashboard` в `App.tsx`;
-- запустить `npm run dev`;
-- если всё открылось — коммитить первый UI.
+- не переходить к Provider Registry без отдельной задачи;
+- не подключать Playwright, аккаунты, storage и Electron IPC без отдельной задачи;
+- после изменений запускать `npm run dev`;
+- перед завершением coding-задачи запускать `npm run build` и `npm run lint`, если они доступны.
