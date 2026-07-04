@@ -1,0 +1,264 @@
+# AI Collector — используемые технологии
+
+## Текущий стек
+
+Проект использует:
+
+```txt
+Electron
+Vite
+React
+TypeScript
+Node.js
+vite-plugin-electron
+vite-plugin-electron-renderer
+electron-builder
+ESLint
+Prettier
+Playwright
+dotenv
+```
+
+## Шаблон
+
+Проект создан через:
+
+```bash
+npm create electron-vite@latest .
+```
+
+Был выбран template:
+
+```txt
+React
+```
+
+TypeScript включён в шаблоне, так как в проекте есть:
+
+```txt
+src/App.tsx
+src/main.tsx
+tsconfig.json
+typescript в package.json
+```
+
+## Важно
+
+Несмотря на название генератора, текущий проект использует:
+
+```txt
+vite-plugin-electron
+```
+
+а не отдельный `electron-vite` config.
+
+Не создавать `electron.vite.config.ts`, если нет отдельной причины.
+
+Использовать текущий:
+
+```txt
+vite.config.ts
+```
+
+## Уже есть в package.json
+
+### Runtime dependencies
+
+```txt
+dotenv
+react
+react-dom
+```
+
+### Dev dependencies
+
+```txt
+@types/react
+@types/react-dom
+@typescript-eslint/eslint-plugin
+@typescript-eslint/parser
+@vitejs/plugin-react
+electron
+electron-builder
+eslint
+eslint-plugin-react-hooks
+eslint-plugin-react-refresh
+playwright
+prettier
+typescript
+vite
+vite-plugin-electron
+vite-plugin-electron-renderer
+```
+
+## Зачем нужен каждый основной пакет
+
+### react
+
+Библиотека для создания интерфейса приложения.
+
+### react-dom
+
+Нужен для рендера React-приложения в DOM.
+
+### dotenv
+
+Нужен для будущих локальных настроек окружения.
+
+Не использовать для хранения паролей от AI-сервисов.
+
+### electron
+
+Оболочка desktop-приложения.
+
+Создаёт окно приложения и позволяет делать локальное приложение на веб-технологиях.
+
+### vite
+
+Dev-сервер и сборщик renderer-приложения.
+
+### typescript
+
+Статическая типизация проекта.
+
+### @vitejs/plugin-react
+
+Интеграция React с Vite.
+
+### vite-plugin-electron
+
+Интеграция Electron main process с Vite.
+
+### vite-plugin-electron-renderer
+
+Поддержка renderer-части Electron-проекта.
+
+### electron-builder
+
+Сборка desktop-приложения в установщик/дистрибутив.
+
+### eslint
+
+Проверка кода на ошибки и проблемные паттерны.
+
+### @typescript-eslint/eslint-plugin и @typescript-eslint/parser
+
+Поддержка TypeScript в ESLint.
+
+### eslint-plugin-react-hooks
+
+Проверка правил React Hooks.
+
+### eslint-plugin-react-refresh
+
+Проверка корректности React Fast Refresh.
+
+### prettier
+
+Автоформатирование кода.
+
+Настроен прямо в `package.json`.
+
+### playwright
+
+Автоматизация браузера для AI-сервисов, browser profiles, сессий и полуавтоматических проверок.
+
+### @types/react и @types/react-dom
+
+TypeScript-типы для React и React DOM.
+
+## Настройки Prettier
+
+В `package.json` используется блок:
+
+```json
+"prettier": {
+  "semi": true,
+  "singleQuote": true,
+  "trailingComma": "all",
+  "printWidth": 100,
+  "tabWidth": 2,
+  "arrowParens": "always"
+}
+```
+
+Отдельные `.prettierrc`, `.prettierignore`, `.editorconfig` пока не нужны.
+
+## Playwright
+
+Playwright нужен для:
+
+- открытия AI-сервисов;
+- работы с browser profiles;
+- сохранения и восстановления сессий;
+- проверки, авторизован ли пользователь;
+- полуавтоматических сценариев.
+
+Установлен командами:
+
+```bash
+npm install -D playwright
+npx playwright install
+```
+
+## Хранение данных MVP
+
+На первом этапе использовать JSON.
+
+Не подключать SQLite до появления реальной потребности.
+
+Планируемые JSON-файлы пользовательских данных:
+
+```txt
+accounts.json
+settings.json
+daily-checks.json
+```
+
+Но настоящие пользовательские данные должны храниться вне Git.
+
+## Команды
+
+Запуск dev-режима:
+
+```bash
+npm run dev
+```
+
+Сборка:
+
+```bash
+npm run build
+```
+
+Lint:
+
+```bash
+npm run lint
+```
+
+## Что не использовать на старте
+
+```txt
+Redux
+Zustand
+SQLite
+Prisma
+Backend server
+Cloud sync
+User auth
+Payment system
+AI APIs
+```
+
+## Почему не Redux/Zustand на старте
+
+На MVP состояние небольшое.
+
+Сначала достаточно:
+
+- локального React state;
+- простых сервисов в `src/core`;
+- JSON-хранилища.
+
+State manager можно добавить позже, когда появится реальная сложность.
