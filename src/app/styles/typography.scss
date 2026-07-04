@@ -1,3 +1,9 @@
+html,
+body,
+#root {
+  min-width: var(--app-min-width);
+}
+
 body {
   font-family:
     Inter,
