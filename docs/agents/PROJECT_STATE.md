@@ -19,7 +19,7 @@ src/
 public/
 ```
 
-- В package.json уже есть Electron, React, TypeScript, Vite и сборочные зависимости.
+- В `package.json` уже есть Electron, React, TypeScript, Vite и сборочные зависимости.
 - Установлен Playwright:
 
 ```bash
@@ -41,7 +41,22 @@ npm install dotenv
 
 - Prettier настроен прямо в `package.json`.
 - Отдельные `.prettierrc`, `.prettierignore`, `.editorconfig` пока не создаём.
-- `.gitignore` нужно дополнить под Electron, Playwright и `.env`.
+- `.gitignore` нужно дополнить под Electron, Playwright и `.env`, если это ещё не сделано.
+
+## Уже добавлено в архитектуру проекта
+
+- Создана папка `src/core/types/`.
+- Добавлен `src/core/types/README.md` с описанием моделей данных.
+- Добавлены первые типы данных:
+  - `ProviderCategory`;
+  - `Provider`.
+- В `Provider` используется поле `categories`, а не `category`, потому что один AI-сервис может относиться к нескольким категориям.
+- Категория `code` пока не используется: кодовые AI-сервисы на MVP считаются частью `chat` или `other`.
+- Добавлен `src/core/types/index.ts` для удобного экспорта типов.
+- Добавлен первый provider JSON:
+  - `src/providers/kling/provider.json`.
+- Создана папка `src/core/provider-registry/`.
+- Добавлен `src/core/provider-registry/README.md` с описанием роли Provider Registry.
 
 ## Важное решение по структуре
 
@@ -63,20 +78,23 @@ providers/
 assets/
 ```
 
-## Следующий шаг
+## Важное решение по папкам
 
-Создать папки:
+Не создавать всю структуру заранее.
 
-```bash
-mkdir -p src/app/pages src/app/components src/app/styles
-mkdir -p src/core/browser src/core/provider-registry src/core/account-manager
-mkdir -p src/core/automation src/core/checker src/core/storage src/core/logger
-mkdir -p src/core/types
-mkdir -p src/providers/kling src/providers/pika src/providers/hailuo
-mkdir -p src/assets
-mkdir -p docs/agents
-mkdir -p examples
-```
+Папки создаются по мере необходимости, когда появляется первый реальный файл или README с объяснением роли модуля.
+
+Причина: так проще понимать историю проекта, делать осмысленные коммиты и не хранить пустые директории без назначения.
+
+## Важное решение по Provider Registry
+
+Provider Registry пока описан документацией, но полноценная реализация кода отложена.
+
+Не импортировать `provider.json` напрямую в TypeScript как готовый `Provider`, потому что TypeScript читает JSON слишком широко: например, `categories` становится `string[]`, а не `ProviderCategory[]`.
+
+Не использовать `as Provider` или `as Provider['categories']` как основное архитектурное решение.
+
+Позже Provider Registry должен загружать JSON через отдельную функцию и валидировать данные перед преобразованием в `Provider`.
 
 ## Установленные пакеты и зачем они нужны
 
@@ -139,7 +157,20 @@ npm install dotenv
 Не хранить пароли
 Не ставить Redux/Zustand на старте
 Не создавать .prettierrc, .prettierignore, .editorconfig без необходимости
+Не создавать всю структуру папок заранее
+Не импортировать provider.json напрямую как готовый Provider без валидации
 ```
+
+## Следующий практический шаг
+
+Сделать первый простой UI с временным массивом провайдеров в `.ts`, чтобы не застревать на типизации JSON-импортов.
+
+Цель следующего шага:
+
+- показать карточку Kling на экране;
+- использовать тип `Provider`;
+- не подключать пока чтение JSON;
+- не реализовывать пока полноценный Provider Registry.
 
 ## Следующая продуктовая задача
 
@@ -153,11 +184,9 @@ npm install dotenv
 
 ## Следующая архитектурная задача
 
-Создать типы:
+Позже добавить остальные типы:
 
 ```ts
-Provider
-ProviderCategory
 ServiceAccount
 AccountStatus
 DailyCheck
