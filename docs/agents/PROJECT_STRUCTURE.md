@@ -35,6 +35,24 @@ src/
   index.css
   vite-env.d.ts
 
+  app/
+    styles/
+      index.scss
+      normalize.scss
+      reset.scss
+      variables.scss
+      typography.scss
+
+    pages/
+      Dashboard/
+        Dashboard.tsx
+        Dashboard.module.scss
+
+    components/
+      ProviderCard/
+        ProviderCard.tsx
+        ProviderCard.module.scss
+
   core/
     types/
       README.md
@@ -46,6 +64,8 @@ src/
       README.md
 
   providers/
+    index.ts
+
     kling/
       provider.json
 
@@ -61,6 +81,8 @@ electron-builder.json5
 .gitignore
 README.md
 ```
+
+Если `App.css` и `index.css` больше не используются после подключения `src/app/styles/index.scss`, их можно оставить временно, но не импортировать в `main.tsx` и `App.tsx`.
 
 ---
 
@@ -161,6 +183,113 @@ React-код не должен напрямую импортировать Elect
 
 ---
 
+## src/app/
+
+Интерфейс приложения.
+
+Сюда помещать:
+
+- страницы;
+- компоненты;
+- стили;
+- модальные окна.
+
+UI не должен напрямую читать файлы с диска. Для этого использовать будущие модули из `src/core/storage`.
+
+---
+
+## src/app/styles/
+
+Базовые стили и простая основа дизайн-системы.
+
+```txt
+index.scss
+normalize.scss
+reset.scss
+variables.scss
+typography.scss
+```
+
+### index.scss
+
+Точка входа для всех глобальных стилей.
+
+Подключается в `src/main.tsx`:
+
+```ts
+import './app/styles/index.scss';
+```
+
+### normalize.scss
+
+Нормализует браузерные стили.
+
+### reset.scss
+
+Сбрасывает базовые отступы и дефолтные стили.
+
+### variables.scss
+
+CSS variables: цвета, радиусы, отступы.
+
+Цвета задавать через `rgba`, в названии указывать прозрачность:
+
+```scss
+--color-black-100: rgba(0, 0, 0, 1);
+--color-black-80: rgba(0, 0, 0, 0.8);
+--color-black-60: rgba(0, 0, 0, 0.6);
+--color-black-10: rgba(0, 0, 0, 0.1);
+--color-black-05: rgba(0, 0, 0, 0.05);
+```
+
+### typography.scss
+
+Базовые шрифты, цвет текста, фон, настройки форм.
+
+---
+
+## src/app/pages/Dashboard/
+
+Первый экран приложения.
+
+Файлы:
+
+```txt
+Dashboard.tsx
+Dashboard.module.scss
+```
+
+Отвечает за:
+
+- заголовок приложения;
+- краткое описание;
+- список карточек AI-сервисов;
+- вывод данных из временного массива `providers`.
+
+---
+
+## src/app/components/ProviderCard/
+
+Первый UI-компонент карточки AI-сервиса.
+
+Файлы:
+
+```txt
+ProviderCard.tsx
+ProviderCard.module.scss
+```
+
+Отвечает за:
+
+- название сервиса;
+- категории;
+- статус;
+- кнопку `Open`.
+
+Кнопка пока без действия.
+
+---
+
 ## src/core/
 
 Бизнес-логика приложения.
@@ -174,8 +303,6 @@ React-код не должен напрямую импортировать Elect
 Общие типы и модели данных приложения.
 
 Здесь описывается, какие сущности существуют в проекте и какие свойства они должны иметь.
-
-Типы из этой папки используются разными частями приложения, чтобы все модули работали с данными в едином формате.
 
 Сейчас добавлены:
 
@@ -239,6 +366,21 @@ src/providers/kling/
 
 ---
 
+## src/providers/index.ts
+
+Временный список провайдеров для UI.
+
+Нужен, чтобы показать первый Dashboard и не застревать на JSON-импортах.
+
+Важно:
+
+- не создавать отдельную папку `data`;
+- не импортировать `provider.json` напрямую как `Provider`;
+- не использовать `as Provider` как основное решение;
+- удалить или заменить этот файл, когда появится настоящий Provider Registry.
+
+---
+
 ## src/core/provider-registry/
 
 Модуль для будущей работы со справочником AI-сервисов.
@@ -267,7 +409,6 @@ Provider Registry должен будет отвечать за:
 Эти модули планируются, но появятся только по мере необходимости:
 
 ```txt
-src/app/
 src/core/browser/
 src/core/account-manager/
 src/core/automation/
@@ -279,20 +420,7 @@ examples/
 docs/agents/
 ```
 
----
-
-## src/app/ — будущий модуль
-
-Интерфейс приложения.
-
-Сюда позже помещать:
-
-- страницы;
-- компоненты;
-- стили;
-- модальные окна.
-
-UI не должен напрямую читать файлы с диска. Для этого использовать будущие модули из `src/core/storage`.
+`src/app/` уже используется, потому что появился первый UI.
 
 ---
 

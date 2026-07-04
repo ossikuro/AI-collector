@@ -98,6 +98,16 @@ npx prettier . --check
 
 ---
 
+## Проверка версии Prettier
+
+```bash
+npx prettier --version
+```
+
+Помогает проверить, что npm-пакет Prettier установлен в проекте.
+
+---
+
 ## Проверка установленных пакетов
 
 ```bash
@@ -145,4 +155,28 @@ npm install
 
 ```bash
 npm run dev
+```
+
+---
+
+## SCSS
+
+SCSS работает через пакет:
+
+```bash
+npm install -D sass-embedded
+```
+
+Повторно запускать эту команду не нужно, если пакет уже есть в `package.json`.
+
+Глобальный входной файл стилей:
+
+```txt
+src/app/styles/index.scss
+```
+
+Он подключается в:
+
+```txt
+src/main.tsx
 ```

@@ -15,6 +15,7 @@ vite-plugin-electron-renderer
 electron-builder
 ESLint
 Prettier
+Sass / SCSS через sass-embedded
 Playwright
 dotenv
 ```
@@ -85,6 +86,7 @@ eslint-plugin-react-hooks
 eslint-plugin-react-refresh
 playwright
 prettier
+sass-embedded
 typescript
 vite
 vite-plugin-electron
@@ -159,6 +161,16 @@ Dev-сервер и сборщик renderer-приложения.
 
 Настроен прямо в `package.json`.
 
+### sass-embedded
+
+SCSS/Sass-компилятор для Vite.
+
+Нужен, чтобы писать:
+
+- глобальные SCSS-файлы;
+- CSS Modules с `.module.scss`;
+- простую дизайн-систему без отдельной UI-библиотеки.
+
 ### playwright
 
 Автоматизация браузера для AI-сервисов, browser profiles, сессий и полуавтоматических проверок.
@@ -183,6 +195,61 @@ TypeScript-типы для React и React DOM.
 ```
 
 Отдельные `.prettierrc`, `.prettierignore`, `.editorconfig` пока не нужны.
+
+## Стили
+
+Используем:
+
+```txt
+SCSS
+CSS Modules
+CSS variables
+rgba-цвета
+```
+
+Глобальные стили:
+
+```txt
+src/app/styles/index.scss
+src/app/styles/normalize.scss
+src/app/styles/reset.scss
+src/app/styles/variables.scss
+src/app/styles/typography.scss
+```
+
+Компонентные стили:
+
+```txt
+ComponentName.module.scss
+```
+
+Цветовая гамма — минималистичная, в духе ChatGPT.
+
+Цвета задавать через CSS variables и `rgba`.
+
+В названии цвета указывать прозрачность:
+
+```scss
+--color-black-100: rgba(0, 0, 0, 1);
+--color-black-80: rgba(0, 0, 0, 0.8);
+--color-black-60: rgba(0, 0, 0, 0.6);
+--color-black-10: rgba(0, 0, 0, 0.1);
+--color-black-05: rgba(0, 0, 0, 0.05);
+```
+
+Пока не используем:
+
+```txt
+Tailwind
+Styled Components
+Emotion
+MUI
+Ant Design
+mixins.scss
+functions.scss
+```
+
+`mixins.scss` и `functions.scss` добавить позже, если появится реальная необходимость.
 
 ## Playwright
 
@@ -237,6 +304,18 @@ Lint:
 npm run lint
 ```
 
+Форматирование:
+
+```bash
+npx prettier . --write
+```
+
+Проверка форматирования:
+
+```bash
+npx prettier . --check
+```
+
 ## Что не использовать на старте
 
 ```txt
@@ -249,6 +328,12 @@ Cloud sync
 User auth
 Payment system
 AI APIs
+Tailwind
+Styled Components
+Emotion
+MUI
+Ant Design
+Biome
 ```
 
 ## Почему не Redux/Zustand на старте
@@ -262,3 +347,15 @@ AI APIs
 - JSON-хранилища.
 
 State manager можно добавить позже, когда появится реальная сложность.
+
+## Почему не Biome
+
+В проекте уже используется связка:
+
+```txt
+ESLint + Prettier
+```
+
+Если расширение Biome в VS Code пишет `Unable to find the Biome binary`, это значит, что расширение установлено, но пакет Biome в проект не добавлен.
+
+Biome сейчас не нужен. Не устанавливать `@biomejs/biome` без отдельного решения.

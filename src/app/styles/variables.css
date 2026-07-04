@@ -1,0 +1,17 @@
+:root {
+  --color-black-100: rgba(0, 0, 0, 1);
+  --color-black-80: rgba(0, 0, 0, 0.8);
+  --color-black-60: rgba(0, 0, 0, 0.6);
+  --color-black-10: rgba(0, 0, 0, 0.1);
+  --color-black-05: rgba(0, 0, 0, 0.05);
+  --color-white-100: rgba(255, 255, 255, 1);
+  --color-white-80: rgba(255, 255, 255, 0.8);
+  --color-green-100: rgba(16, 163, 127, 1);
+  --color-green-80: rgba(16, 163, 127, 0.8);
+  --color-green-10: rgba(16, 163, 127, 0.1);
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+}/*# sourceMappingURL=variables.css.map */

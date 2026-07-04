@@ -68,6 +68,16 @@ npm install dotenv
 
 Важно: не хранить в `.env` пароли от AI-сервисов.
 
+### 4. sass-embedded
+
+Для SCSS-стилей.
+
+```bash
+npm install -D sass-embedded
+```
+
+После установки SCSS был подключён, и приложение успешно открылось через `npm run dev`.
+
 ---
 
 ## Что пока НЕ устанавливать
@@ -81,6 +91,8 @@ npm install dotenv
 Не подключать API нейросетей
 Не хранить пароли
 Не ставить Redux/Zustand на старте
+Не ставить Tailwind/MUI/Ant Design
+Не ставить Biome
 ```
 
 ---
@@ -120,19 +132,81 @@ test-results
 
 ---
 
-## Создать рабочую структуру папок
+## Текущая структура UI
 
-В корне проекта выполнить:
+Уже созданы или должны быть созданы:
 
-```bash
-mkdir -p src/app/pages src/app/components src/app/styles
-mkdir -p src/core/browser src/core/provider-registry src/core/account-manager
-mkdir -p src/core/automation src/core/checker src/core/storage src/core/logger
-mkdir -p src/core/types
-mkdir -p src/providers/kling src/providers/pika src/providers/hailuo
-mkdir -p src/assets
-mkdir -p docs/agents
-mkdir -p examples
+```txt
+src/app/styles/index.scss
+src/app/styles/normalize.scss
+src/app/styles/reset.scss
+src/app/styles/variables.scss
+src/app/styles/typography.scss
+
+src/app/pages/Dashboard/Dashboard.tsx
+src/app/pages/Dashboard/Dashboard.module.scss
+
+src/app/components/ProviderCard/ProviderCard.tsx
+src/app/components/ProviderCard/ProviderCard.module.scss
+
+src/providers/index.ts
+```
+
+---
+
+## Стили
+
+Используем SCSS + CSS Modules.
+
+Глобальный файл:
+
+```txt
+src/app/styles/index.scss
+```
+
+Он должен быть подключён в `src/main.tsx`:
+
+```ts
+import './app/styles/index.scss';
+```
+
+Цвета делаем минималистичные, в духе ChatGPT.
+
+Цвета задаём через `rgba` и CSS variables.
+
+Пример:
+
+```scss
+--color-black-100: rgba(0, 0, 0, 1);
+--color-black-80: rgba(0, 0, 0, 0.8);
+--color-black-60: rgba(0, 0, 0, 0.6);
+--color-black-10: rgba(0, 0, 0, 0.1);
+--color-black-05: rgba(0, 0, 0, 0.05);
+```
+
+Пока не создавать:
+
+```txt
+mixins.scss
+functions.scss
+```
+
+---
+
+## Создание структуры папок
+
+Раньше обсуждалась команда создания всей структуры заранее. Сейчас правило изменено.
+
+Не создавать все будущие папки заранее.
+
+Создавать папку только тогда, когда в ней появляется первый реальный файл или README.
+
+Уже актуальные папки:
+
+```txt
+src/app/
+src/core/
+src/providers/
 ```
 
 ---
@@ -185,3 +259,50 @@ npm audit fix --force
 `--force` может обновить зависимости до несовместимых версий и сломать Electron/Vite шаблон.
 
 Сначала достаточно просто продолжать разработку.
+
+---
+
+## Если автоформатирование VS Code не работает
+
+Проверить:
+
+1. npm-пакет установлен:
+
+```bash
+npx prettier --version
+```
+
+2. Расширение VS Code установлено:
+
+```txt
+Prettier - Code formatter
+ID: esbenp.prettier-vscode
+```
+
+3. В VS Code включено:
+
+```txt
+Format On Save
+Default Formatter: Prettier - Code formatter
+```
+
+4. Если расширение Biome пишет ошибку:
+
+```txt
+Unable to find the Biome binary
+```
+
+то Biome нужно отключить для этого проекта. Мы его сейчас не используем.
+
+---
+
+## Следующий шаг
+
+Довести первый Dashboard:
+
+- проверить `src/providers/index.ts`;
+- проверить `ProviderCard.tsx`;
+- проверить `Dashboard.tsx`;
+- подключить `Dashboard` в `App.tsx`;
+- запустить `npm run dev`;
+- если всё открылось — коммитить первый UI.

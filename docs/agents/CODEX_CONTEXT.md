@@ -41,25 +41,9 @@ vite-plugin-electron-renderer
 electron-builder
 ESLint
 Prettier
+Sass / SCSS через sass-embedded
 Playwright
 dotenv
-```
-
-В проекте есть:
-
-```txt
-electron/
-src/
-public/
-vite.config.ts
-package.json
-package-lock.json
-tsconfig.json
-tsconfig.node.json
-electron-builder.json5
-.eslintrc.cjs
-.gitignore
-README.md
 ```
 
 Electron уже запускался через:
@@ -68,6 +52,12 @@ Electron уже запускался через:
 npm run dev
 ```
 
+После подключения SCSS и первого UI приложение также успешно открывалось через `npm run dev`.
+
+---
+
+## Установленные пакеты
+
 Playwright установлен:
 
 ```bash
@@ -75,9 +65,25 @@ npm install -D playwright
 npx playwright install
 ```
 
-Prettier установлен и настроен внутри `package.json`, отдельный `.prettierrc` не нужен.
+Prettier установлен и настроен внутри `package.json`.
+
+```bash
+npm install -D prettier
+```
 
 `dotenv` установлен для будущих локальных настроек, но пароли от AI-сервисов в `.env` хранить нельзя.
+
+```bash
+npm install dotenv
+```
+
+Sass установлен для SCSS-стилей:
+
+```bash
+npm install -D sass-embedded
+```
+
+Использовать CSS Modules + SCSS для компонентов.
 
 ---
 
@@ -143,6 +149,71 @@ assets/
 ```
 
 без явной причины.
+
+Не создавать новые папки заранее без первого реального файла или README с объяснением роли модуля.
+
+---
+
+## Текущая UI-структура
+
+Сейчас уже созданы файлы для первого UI:
+
+```txt
+src/app/pages/Dashboard/Dashboard.tsx
+src/app/pages/Dashboard/Dashboard.module.scss
+src/app/components/ProviderCard/ProviderCard.tsx
+src/app/components/ProviderCard/ProviderCard.module.scss
+src/providers/index.ts
+```
+
+`src/providers/index.ts` — временный список провайдеров для UI.
+
+Важно: пока не импортировать `provider.json` напрямую в TypeScript.
+
+---
+
+## Стили
+
+SCSS уже подключён.
+
+Базовая структура стилей:
+
+```txt
+src/app/styles/index.scss
+src/app/styles/normalize.scss
+src/app/styles/reset.scss
+src/app/styles/variables.scss
+src/app/styles/typography.scss
+```
+
+`index.scss` подключается в `src/main.tsx`:
+
+```ts
+import './app/styles/index.scss';
+```
+
+Использовать минималистичный дизайн в духе ChatGPT.
+
+Цвета задавать через CSS variables и `rgba`.
+
+В названиях цветов указывать прозрачность:
+
+```scss
+--color-black-100: rgba(0, 0, 0, 1);
+--color-black-80: rgba(0, 0, 0, 0.8);
+--color-black-60: rgba(0, 0, 0, 0.6);
+--color-black-10: rgba(0, 0, 0, 0.1);
+--color-black-05: rgba(0, 0, 0, 0.05);
+
+--color-white-100: rgba(255, 255, 255, 1);
+--color-white-80: rgba(255, 255, 255, 0.8);
+
+--color-green-100: rgba(16, 163, 127, 1);
+--color-green-80: rgba(16, 163, 127, 0.8);
+--color-green-10: rgba(16, 163, 127, 0.1);
+```
+
+Пока не создавать `mixins.scss` и `functions.scss`. Добавить позже, если появится реальная потребность.
 
 ---
 
@@ -227,44 +298,6 @@ examples/provider.example.json
 
 ---
 
-## Пароли
-
-Пароли от AI-сервисов не хранить никогда.
-
-Процесс подключения аккаунта:
-
-1. пользователь нажимает “Подключить аккаунт”;
-2. приложение открывает браузер;
-3. пользователь логинится сам;
-4. приложение сохраняет browser profile / storageState;
-5. при следующем запуске используется сохранённая сессия.
-
-Если сессия слетела, ставить статус:
-
-```txt
-session_expired
-```
-
----
-
-## Несколько аккаунтов одного сервиса
-
-Поддержка нескольких аккаунтов обязательна.
-
-Пример:
-
-```txt
-kling-main
-kling-alt
-kling-work
-```
-
-Каждый аккаунт должен иметь отдельный browser profile.
-
-Нельзя переключать аккаунты внутри одной вкладки.
-
----
-
 ## Providers
 
 Каждый AI-сервис описывается папкой:
@@ -272,85 +305,48 @@ kling-work
 ```txt
 src/providers/kling/
   provider.json
-  automation.json
-  selectors.json
 ```
+
+Позже рядом появятся:
+
+```txt
+automation.json
+selectors.json
+```
+
+Но пока `automation.json` и `selectors.json` не создавать, пока мы реально не дошли до автоматизации.
 
 ---
 
 ## provider.json
 
-Пример:
+Текущий пример:
 
 ```json
 {
   "id": "kling",
   "name": "Kling AI",
-  "category": "video",
+  "categories": ["video"],
   "websiteUrl": "https://klingai.com",
-  "launchUrl": "https://klingai.com",
-  "authMethods": ["google", "email"],
-  "hasFreeCredits": true,
-  "creditPeriod": "daily",
-  "knownCredits": 20,
-  "claimType": "auto_on_login"
+  "launchUrl": "https://klingai.com"
 }
 ```
 
----
-
-## automation.json
-
-Пример:
-
-```json
-{
-  "mode": "semi_auto",
-  "steps": [
-    {
-      "type": "open",
-      "url": "https://klingai.com"
-    },
-    {
-      "type": "wait_for_user_if_login_required"
-    },
-    {
-      "type": "read_text",
-      "target": "creditsCounter"
-    }
-  ]
-}
-```
-
----
-
-## selectors.json
-
-Пример:
-
-```json
-{
-  "loginButton": "button:has-text('Login')",
-  "creditsCounter": "[data-testid='credits']",
-  "claimButton": "button:has-text('Claim')"
-}
-```
-
-Если сайт поменял интерфейс, сначала менять `selectors.json`, а не код приложения.
+В `Provider` используется поле `categories`, а не `category`, потому что один AI-сервис может относиться к нескольким категориям.
 
 ---
 
 ## Статусы аккаунта
 
-Использовать такие статусы:
+Позже использовать такие статусы:
 
 ```ts
 type AccountStatus =
-  | "not_connected"
-  | "connected"
-  | "session_expired"
-  | "manual_required"
-  | "error";
+  | 'not_connected'
+  | 'connected'
+  | 'session_expired'
+  | 'manual_required'
+  | 'error';
 ```
 
 ---
@@ -367,6 +363,8 @@ type AccountStatus =
 Не автоматизировать обход капчи
 Не переносить структуру обратно в корень проекта
 Не создавать .prettierrc, .prettierignore, .editorconfig без необходимости
+Не подключать Redux/Zustand без реальной необходимости
+Не создавать data-папку ради временных моков
 ```
 
 ---
@@ -393,6 +391,21 @@ Provider Registry пока не реализован кодом.
 
 Не использовать `as Provider` или `as Provider['categories']` как основное архитектурное решение.
 
-На следующем этапе можно временно использовать массив провайдеров в `.ts` для UI.
+Сейчас для UI используется временный массив провайдеров в `.ts`.
 
 Позже Provider Registry должен загружать JSON через отдельную функцию и валидировать данные перед преобразованием в `Provider`.
+
+---
+
+## Следующая задача для агента
+
+Продолжать от текущего UI:
+
+1. Проверить/дописать `src/providers/index.ts` с временным массивом `Provider[]`.
+2. Проверить/дописать `ProviderCard.tsx` и `ProviderCard.module.scss`.
+3. Проверить/дописать `Dashboard.tsx` и `Dashboard.module.scss`.
+4. Подключить `Dashboard` в `App.tsx`.
+5. Запустить `npm run dev`.
+6. Если UI открывается — следующим коммитом зафиксировать первый Dashboard.
+
+Пока не переходить к Provider Registry, Playwright, аккаунтам, storage и Electron IPC.

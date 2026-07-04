@@ -1,11 +1,5 @@
 body {
-  font-family:
-    Inter,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    sans-serif;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: var(--color-black-80);
   background: var(--color-black-05);
 }
@@ -19,4 +13,4 @@ select {
 
 button {
   cursor: pointer;
-}
+}/*# sourceMappingURL=typography.css.map */
