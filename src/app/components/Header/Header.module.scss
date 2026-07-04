@@ -1,0 +1,141 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: grid;
+  box-sizing: border-box;
+  grid-template-columns: minmax(168px, 220px) minmax(96px, 1fr) auto;
+  align-items: center;
+  gap: var(--space-md);
+  min-height: 64px;
+  padding: 8px var(--space-xl, 32px);
+  border-bottom: 1px solid var(--color-black-10);
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(12px);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  display: block;
+  width: min(168px, 100%);
+  height: 32px;
+  object-fit: contain;
+  object-position: left center;
+}
+
+.searchPlaceholder {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  width: 100%;
+  min-width: 0;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--color-black-10);
+  border-radius: 999px;
+  color: var(--color-black-60);
+  background: var(--color-black-05);
+  user-select: none;
+}
+
+.searchIcon {
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+  min-width: 0;
+}
+
+.iconButton,
+.openAllButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  border: 1px solid var(--color-black-10);
+  color: var(--color-black-80);
+  background: var(--color-white-100);
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    color 160ms ease;
+}
+
+.iconButton:hover,
+.openAllButton:hover {
+  border-color: var(--color-black-60);
+  color: var(--color-black-100);
+  background: var(--color-black-05);
+}
+
+.iconButton {
+  flex: 0 0 40px;
+  width: 40px;
+  border-radius: 999px;
+}
+
+.iconButton svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.openAllButton {
+  flex: 0 0 auto;
+  padding: 0 16px;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+@media (max-width: 720px) {
+  .header {
+    grid-template-columns: minmax(96px, 1fr) auto;
+    gap: var(--space-sm);
+    padding: 10px var(--space-md);
+  }
+
+  .searchPlaceholder {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    height: 38px;
+  }
+
+  .actions {
+    gap: 6px;
+  }
+
+  .iconButton {
+    flex-basis: 36px;
+    width: 36px;
+    height: 36px;
+  }
+
+  .openAllButton {
+    height: 36px;
+    padding: 0 12px;
+  }
+}
+
+@media (max-width: 420px) {
+  .logo {
+    width: 132px;
+  }
+
+  .openAllButton {
+    max-width: 92px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
