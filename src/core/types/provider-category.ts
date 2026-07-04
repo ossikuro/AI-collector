@@ -1,0 +1,1 @@
+export type ProviderCategory = 'chat' | 'image' | 'video' | 'audio' | 'other';
