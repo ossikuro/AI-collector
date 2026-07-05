@@ -146,6 +146,9 @@ src/app/styles/typography.scss
 src/app/pages/Dashboard/Dashboard.tsx
 src/app/pages/Dashboard/Dashboard.module.scss
 
+src/app/components/UI/Button/Button.tsx
+src/app/components/UI/Button/Button.module.scss
+
 src/app/components/Header/Header.tsx
 src/app/components/Header/Header.module.scss
 
@@ -160,10 +163,12 @@ Dashboard уже показывает:
 
 - верхнюю шапку с логотипом `svoi.soroki`;
 - placeholder будущего поиска `Поиск`;
-- кнопки `Добавить`, `Статистика`, `Настройки`, `Открыть все`;
+- кнопки `Добавить`, `Статистика`, `Настройки`, `Open All`;
 - карточку провайдера Kling.
 
 Поиск, настройки, статистика, добавление и открытие всех пока без действий.
+
+Кнопки в шапке и карточке провайдера используют общий компонент `Button`.
 
 ---
 

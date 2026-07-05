@@ -1,4 +1,5 @@
 import type { Provider } from '../../../core/types';
+import { Button } from '../UI/Button/Button';
 import styles from './ProviderCard.module.scss';
 
 interface ProviderCardProps {
@@ -21,9 +22,9 @@ export function ProviderCard({ provider }: ProviderCardProps) {
         </div>
         <div className={styles.status}>Not connected</div>
       </div>
-      <button className={styles.button} type="button">
+      <Button buttonStyle="CTA" className={styles.button} size="L">
         Open
-      </button>
+      </Button>
     </article>
   );
 }
