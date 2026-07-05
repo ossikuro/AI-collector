@@ -48,6 +48,11 @@ src/
         Dashboard.module.scss
 
     components/
+      UI/
+        Button/
+          Button.tsx
+          Button.module.scss
+
       Header/
         Header.tsx
         Header.module.scss
@@ -76,6 +81,20 @@ src/
     SV{}ISOROKI.svg
 
 public/
+
+tests/
+  helpers/
+    create-vite-test-server.mjs
+
+  ui/
+    Button/
+      Button.fixture.html
+      Button.fixture.tsx
+      Button.spec.mjs
+
+  run-tests.mjs
+  test-env.d.ts
+  README.md
 
 package.json
 package-lock.json
@@ -312,7 +331,7 @@ Header.module.scss
 
 - логотип/название `svoi.soroki` через `src/assets/SV{}ISOROKI.svg`;
 - неактивный placeholder будущего поиска с текстом `Поиск`;
-- кнопки `Добавить`, `Статистика`, `Настройки`, `Открыть все`;
+- кнопки `Добавить`, `Статистика`, `Настройки`, `Open All`;
 - `aria-label` для кнопок.
 
 Важно:
@@ -320,7 +339,60 @@ Header.module.scss
 - поиск/фильтрация пока не реализованы;
 - кнопки пока без обработчиков;
 - иконки сделаны inline SVG, без новой UI/icon-библиотеки;
+- кнопки отрисовываются через общий `src/app/components/UI/Button/Button.tsx`;
 - шапка адаптивная, минимальная ширина приложения 360px.
+
+---
+
+## src/app/components/UI/Button/
+
+Общий UI-компонент кнопки.
+
+Файлы:
+
+```txt
+Button.tsx
+Button.module.scss
+```
+
+Отвечает за:
+
+- варианты внешнего вида `naked`, `framed`, `CTA`;
+- размеры `L` и `S`;
+- текст, иконку или иконку вместе с текстом;
+- контейнер для SVG-иконки;
+- `onClick`, `disabled`, `aria-label` и другие стандартные свойства HTML-кнопки;
+- временный CSS-tooltip для кнопок только с иконкой.
+
+Важно: проп называется `buttonStyle`, а не `style`, потому что `style` в React уже используется для inline-CSS объекта.
+
+---
+
+## tests/
+
+Автотесты проекта.
+
+Сейчас тесты запускаются без отдельного test runner-пакета, через Node, Vite и уже установленный Playwright.
+
+Файлы:
+
+```txt
+tests/run-tests.mjs
+tests/test-env.d.ts
+tests/helpers/create-vite-test-server.mjs
+tests/ui/Button/Button.fixture.html
+tests/ui/Button/Button.fixture.tsx
+tests/ui/Button/Button.spec.mjs
+tests/README.md
+```
+
+Правила:
+
+- единая команда для всех тестов: `npm test`;
+- UI-тесты компонентов хранить в `tests/ui/ComponentName/`;
+- общие помощники для тестов хранить в `tests/helpers/`;
+- fixture-файлы держать рядом со spec-файлом компонента;
+- не подключать основной `vite.config.ts` в компонентных тестах, чтобы Electron-плагин не запускал watch-сборки.
 
 ---
 
@@ -340,7 +412,7 @@ ProviderCard.module.scss
 - название сервиса;
 - категории;
 - статус;
-- кнопку `Open`.
+- кнопку `Open` через общий `Button`.
 
 Кнопка пока без действия.
 

@@ -66,6 +66,54 @@ npm run lint
 
 ---
 
+## Запуск автотестов
+
+```bash
+npm test
+```
+
+Единая команда для всех автотестов проекта.
+
+Сейчас запускает UI-тесты.
+
+---
+
+## Запуск UI-тестов
+
+```bash
+npm run test:ui
+```
+
+Запускает автотесты UI-компонентов.
+
+Текущая структура:
+
+```txt
+tests/ui/ComponentName/
+  ComponentName.fixture.html
+  ComponentName.fixture.tsx
+  ComponentName.spec.mjs
+```
+
+---
+
+## Проверка Button отдельно
+
+```bash
+npm run test:button
+```
+
+Запускает только тест общего компонента `Button`.
+
+Проверяет:
+
+- SVG-иконка внутри кнопки отрисовалась;
+- клик по активной кнопке запускает функцию;
+- клик по disabled-кнопке не запускает функцию;
+- для icon-only кнопки есть временный tooltip.
+
+---
+
 ## Установка Playwright-браузеров
 
 ```bash

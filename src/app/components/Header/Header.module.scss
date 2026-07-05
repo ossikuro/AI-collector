@@ -60,46 +60,8 @@
   min-width: 0;
 }
 
-.iconButton,
-.openAllButton {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 40px;
-  border: 1px solid var(--color-black-10);
-  color: var(--color-black-80);
-  background: var(--color-white-100);
-  transition:
-    border-color 160ms ease,
-    background-color 160ms ease,
-    color 160ms ease;
-}
-
-.iconButton:hover,
-.openAllButton:hover {
-  border-color: var(--color-black-60);
-  color: var(--color-black-100);
-  background: var(--color-black-05);
-}
-
-.iconButton {
-  flex: 0 0 40px;
-  width: 40px;
-  border-radius: var(--radius-pill);
-}
-
-.iconButton svg {
-  width: 20px;
-  height: 20px;
-  fill: currentColor;
-}
-
 .openAllButton {
   flex: 0 0 auto;
-  padding: 0 16px;
-  border-radius: var(--radius-md);
-  font-size: 14px;
-  white-space: nowrap;
 }
 
 @media (max-width: 720px) {
@@ -119,14 +81,7 @@
     gap: var(--space-xs);
   }
 
-  .iconButton {
-    flex-basis: 36px;
-    width: 36px;
-    height: 36px;
-  }
-
   .openAllButton {
-    height: 36px;
     padding: 0 var(--space-control-sm);
   }
 }

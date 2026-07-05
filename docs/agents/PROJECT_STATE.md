@@ -75,6 +75,8 @@ npm install -D sass-embedded
 ```txt
 src/app/pages/Dashboard/Dashboard.tsx
 src/app/pages/Dashboard/Dashboard.module.scss
+src/app/components/UI/Button/Button.tsx
+src/app/components/UI/Button/Button.module.scss
 src/app/components/Header/Header.tsx
 src/app/components/Header/Header.module.scss
 src/app/components/ProviderCard/ProviderCard.tsx
@@ -86,15 +88,56 @@ src/providers/index.ts
 
 - `Dashboard` показывает список AI-сервисов;
 - `Header` показывает верхнюю шапку Dashboard;
+- `Button` задаёт общий вид кнопок для Header и ProviderCard;
 - `ProviderCard` показывает карточку одного сервиса;
 - `src/providers/index.ts` временно хранит массив `Provider[]` для UI;
 - пока показываем Kling;
-- в `Header` есть логотип `svoi.soroki`, placeholder `Поиск` и кнопки `Добавить`, `Статистика`, `Настройки`, `Открыть все`;
+- в `Header` есть логотип `svoi.soroki`, placeholder `Поиск` и кнопки `Добавить`, `Статистика`, `Настройки`, `Open All`;
 - кнопки в `Header` пока без действий, фильтрация/поиск пока не реализованы;
 - кнопка `Open` пока без действия;
 - статус пока статичный: `Not connected`.
 
+`Button` поддерживает:
+
+- `buttonStyle`: `naked`, `framed`, `CTA`;
+- `size`: `L`, `S`;
+- текст, SVG-иконку или SVG-иконку с текстом;
+- стандартные свойства кнопки вроде `onClick`, `disabled`, `aria-label`;
+- временный tooltip для кнопок только с иконкой.
+
 Важно: `src/providers/index.ts` — временное решение до Provider Registry.
+
+---
+
+## Уже добавлено в автотесты
+
+Добавлена базовая структура автотестов:
+
+```txt
+tests/
+  helpers/
+    create-vite-test-server.mjs
+
+  ui/
+    Button/
+      Button.fixture.html
+      Button.fixture.tsx
+      Button.spec.mjs
+
+  run-tests.mjs
+  test-env.d.ts
+  README.md
+```
+
+Команды:
+
+```bash
+npm test
+npm run test:ui
+npm run test:button
+```
+
+Текущий `Button`-тест проверяет SVG-иконку, клик по активной кнопке, disabled-состояние и временный tooltip для icon-only кнопки.
 
 ---
 
@@ -127,6 +170,7 @@ import './app/styles/index.scss';
 - общие скругления держать в `--radius-*`;
 - минимальная ширина приложения: `--app-min-width: 360px`;
 - использовать CSS Modules + SCSS для компонентов;
+- общий компонент `Button` хранит свои стили рядом в `Button.module.scss`;
 - `mixins.scss` и `functions.scss` пока не создавать.
 
 ---

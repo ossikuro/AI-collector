@@ -161,6 +161,8 @@ assets/
 ```txt
 src/app/pages/Dashboard/Dashboard.tsx
 src/app/pages/Dashboard/Dashboard.module.scss
+src/app/components/UI/Button/Button.tsx
+src/app/components/UI/Button/Button.module.scss
 src/app/components/Header/Header.tsx
 src/app/components/Header/Header.module.scss
 src/app/components/ProviderCard/ProviderCard.tsx
@@ -178,11 +180,13 @@ src/providers/index.ts
 - верхнюю шапку `Header`;
 - логотип `svoi.soroki`;
 - placeholder будущего поиска `Поиск`;
-- кнопки `Добавить`, `Статистика`, `Настройки`, `Открыть все`;
+- кнопки `Добавить`, `Статистика`, `Настройки`, `Open All`;
 - список карточек провайдеров;
 - карточку Kling.
 
 Кнопки и поиск пока без действий.
+
+Кнопки в `Header` и `ProviderCard` отрисовываются через общий компонент `src/app/components/UI/Button/Button.tsx`.
 
 ---
 

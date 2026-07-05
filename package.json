@@ -7,6 +7,9 @@
     "dev": "vite",
     "build": "tsc && vite build && electron-builder",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "test": "node tests/run-tests.mjs",
+    "test:ui": "node tests/run-tests.mjs ui",
+    "test:button": "node tests/ui/Button/Button.spec.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
