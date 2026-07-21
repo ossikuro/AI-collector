@@ -34,7 +34,7 @@ npm create electron-vite@latest .
 React
 ```
 
-TypeScript включён в шаблоне, так как в проекте есть:
+TypeScript включен в шаблоне, так как в проекте есть:
 
 ```txt
 src/App.tsx
@@ -51,7 +51,7 @@ typescript в package.json
 vite-plugin-electron
 ```
 
-а не отдельный `electron-vite` config.
+а не отдельный `electron.vite.config.ts`.
 
 Не создавать `electron.vite.config.ts`, если нет отдельной причины.
 
@@ -62,6 +62,20 @@ vite.config.ts
 ```
 
 ## Уже есть в package.json
+
+### Scripts
+
+```txt
+npm run dev
+npm run build
+npm run lint
+npm test
+npm run test:ui
+npm run test:button
+npm run preview
+```
+
+Отдельного `npm run format` сейчас нет.
 
 ### Runtime dependencies
 
@@ -113,7 +127,7 @@ vite-plugin-electron-renderer
 
 Оболочка desktop-приложения.
 
-Создаёт окно приложения и позволяет делать локальное приложение на веб-технологиях.
+Создает окно приложения и позволяет делать локальное приложение на веб-технологиях.
 
 ### vite
 
@@ -138,6 +152,8 @@ Dev-сервер и сборщик renderer-приложения.
 ### electron-builder
 
 Сборка desktop-приложения в установщик/дистрибутив.
+
+Создает артефакты в `release/`.
 
 ### eslint
 
@@ -239,146 +255,22 @@ ComponentName.module.scss
 --color-white-100: rgba(255, 255, 255, 1);
 --color-white-80: rgba(255, 255, 255, 0.8);
 --color-white-96: rgba(255, 255, 255, 0.96);
+
+--color-green-100: rgba(16, 163, 127, 1);
+--color-green-80: rgba(16, 163, 127, 0.8);
+--color-green-10: rgba(16, 163, 127, 0.1);
 ```
 
-Общие расстояния и скругления держать в `variables.scss`:
+## Electron bridge
 
-```scss
---radius-md: 12px;
---radius-lg: 16px;
---radius-pill: 999px;
+Renderer не должен напрямую импортировать Electron API.
 
---space-xs: 4px;
---space-sm: 8px;
---space-control-sm: 12px;
---space-md: 16px;
---space-lg: 24px;
---space-xl: 32px;
+Для app-specific действий использовать `preload.ts`.
 
---app-min-width: 360px;
+Сейчас начат API:
+
+```ts
+window.aiCollector.openProviderUrl(url);
 ```
 
-Минимальный размер экрана для приложения — 360px. Ниже этого приложение не сжимать.
-
-Пока не используем:
-
-```txt
-Tailwind
-Styled Components
-Emotion
-MUI
-Ant Design
-mixins.scss
-functions.scss
-```
-
-`mixins.scss` и `functions.scss` добавить позже, если появится реальная необходимость.
-
-## Playwright
-
-Playwright нужен для:
-
-- открытия AI-сервисов;
-- работы с browser profiles;
-- сохранения и восстановления сессий;
-- проверки, авторизован ли пользователь;
-- полуавтоматических сценариев.
-
-Установлен командами:
-
-```bash
-npm install -D playwright
-npx playwright install
-```
-
-## Хранение данных MVP
-
-На первом этапе использовать JSON.
-
-Не подключать SQLite до появления реальной потребности.
-
-Планируемые JSON-файлы пользовательских данных:
-
-```txt
-accounts.json
-settings.json
-daily-checks.json
-```
-
-Но настоящие пользовательские данные должны храниться вне Git.
-
-## Команды
-
-Запуск dev-режима:
-
-```bash
-npm run dev
-```
-
-Сборка:
-
-```bash
-npm run build
-```
-
-Lint:
-
-```bash
-npm run lint
-```
-
-Форматирование:
-
-```bash
-npx prettier . --write
-```
-
-Проверка форматирования:
-
-```bash
-npx prettier . --check
-```
-
-## Что не использовать на старте
-
-```txt
-Redux
-Zustand
-SQLite
-Prisma
-Backend server
-Cloud sync
-User auth
-Payment system
-AI APIs
-Tailwind
-Styled Components
-Emotion
-MUI
-Ant Design
-Biome
-```
-
-## Почему не Redux/Zustand на старте
-
-На MVP состояние небольшое.
-
-Сначала достаточно:
-
-- локального React state;
-- простых сервисов в `src/core`;
-- JSON-хранилища.
-
-State manager можно добавить позже, когда появится реальная сложность.
-
-## Почему не Biome
-
-В проекте уже используется связка:
-
-```txt
-ESLint + Prettier
-```
-
-Если расширение Biome в VS Code пишет `Unable to find the Biome binary`, это значит, что расширение установлено, но пакет Biome в проект не добавлен.
-
-Biome сейчас не нужен. Не устанавливать `@biomejs/biome` без отдельного решения.
+Он вызывает IPC channel `provider:open-url` в main process. Main process должен проверять URL и открывать только `http:`/`https:` ссылки через `shell.openExternal`.
