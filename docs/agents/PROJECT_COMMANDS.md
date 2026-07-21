@@ -40,7 +40,27 @@ Ctrl + C
 npm run build
 ```
 
-Запускает TypeScript-проверку, собирает Vite-проект и затем собирает Electron-приложение через `electron-builder`.
+Запускает:
+
+```txt
+tsc
+vite build
+electron-builder
+```
+
+`electron-builder` создает desktop-сборку в `release/`.
+
+Если Electron нужной версии еще не скачан, build может обратиться к GitHub. В Codex-песочнице для этого может понадобиться разрешение на сеть.
+
+Во время сборки сейчас возможны предупреждения:
+
+- Sass `legacy-js-api`;
+- в `package.json` нет `description`;
+- в `package.json` нет `author`;
+- не задан app icon;
+- macOS code signing может быть пропущен.
+
+Эти предупреждения не равны ошибке сборки.
 
 ---
 
@@ -60,6 +80,12 @@ npm run preview
 
 ```bash
 npm run lint
+```
+
+Фактически запускает:
+
+```bash
+eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0
 ```
 
 Проверяет код на ошибки и проблемные паттерны.
@@ -128,6 +154,10 @@ npx playwright install
 
 ## Форматирование файлов Prettier
 
+В `package.json` пока нет отдельного `format` script.
+
+Использовать:
+
 ```bash
 npx prettier . --write
 ```
@@ -186,7 +216,13 @@ npm audit
 
 Показывает предупреждения безопасности по зависимостям.
 
-Не запускать `npm audit fix --force` без отдельного решения: эта команда может обновить пакеты до несовместимых версий.
+Не запускать:
+
+```bash
+npm audit fix --force
+```
+
+Эта команда может обновить зависимости до несовместимых версий и сломать Electron/Vite-шаблон.
 
 ---
 
@@ -197,7 +233,7 @@ rm -rf node_modules package-lock.json
 npm install
 ```
 
-Использовать только если зависимости явно сломались.
+Использовать только если зависимости явно сломались и пользователь согласен на такую очистку.
 
 После этого снова проверить:
 

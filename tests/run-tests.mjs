@@ -1,7 +1,7 @@
 import { spawn } from 'node:child_process';
 
 const suites = {
-  ui: ['tests/ui/Button/Button.spec.mjs'],
+  ui: ['tests/ui/Button/Button.spec.mjs', 'tests/ui/ProviderCard/ProviderCard.spec.mjs'],
 };
 
 const requestedSuite = process.argv[2];

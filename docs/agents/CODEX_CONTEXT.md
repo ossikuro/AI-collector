@@ -52,7 +52,11 @@ Electron уже запускался через:
 npm run dev
 ```
 
-После подключения SCSS и первого UI приложение также успешно открывалось через `npm run dev`.
+Первый UI Dashboard создан и подключен.
+
+`npm run lint` проходит.
+
+`npm run build` проходил успешно после разрешения сети для `electron-builder`.
 
 ---
 
@@ -89,7 +93,21 @@ npm install -D sass-embedded
 
 ## Текущие настройки package.json
 
-В `package.json` должен быть блок:
+В `package.json` есть scripts:
+
+```txt
+dev
+build
+lint
+test
+test:ui
+test:button
+preview
+```
+
+Отдельного `format` script сейчас нет.
+
+Prettier настроен блоком:
 
 ```json
 "prettier": {
@@ -108,7 +126,7 @@ npm install -D sass-embedded
 
 ## .gitignore
 
-В `.gitignore` должны быть учтены стандартные папки проекта, сборки, локальные env-файлы и отчёты Playwright:
+В `.gitignore` уже учтены:
 
 ```gitignore
 node_modules
@@ -116,6 +134,7 @@ dist
 dist-ssr
 dist-electron
 out
+release/
 coverage
 playwright-report
 test-results
@@ -128,7 +147,7 @@ test-results
 
 ## Важное правило про структуру
 
-После создания шаблона наша архитектура живёт внутри `src/`.
+После создания шаблона наша архитектура живет внутри `src/`.
 
 Использовать:
 
@@ -169,11 +188,12 @@ src/app/components/ProviderCard/ProviderCard.tsx
 src/app/components/ProviderCard/ProviderCard.module.scss
 src/assets/SV{}ISOROKI.svg
 src/providers/index.ts
+src/providers/kling/provider.json
 ```
 
 `src/providers/index.ts` — временный список провайдеров для UI.
 
-Важно: пока не импортировать `provider.json` напрямую в TypeScript.
+Важно: пока не переносить provider data из JSON в TypeScript как постоянное решение.
 
 Текущий Dashboard уже показывает:
 
@@ -184,15 +204,52 @@ src/providers/index.ts
 - список карточек провайдеров;
 - карточку Kling.
 
-Кнопки и поиск пока без действий.
+Кнопки поиска, настроек, статистики, добавления и `Open All` пока без бизнес-действий.
+
+`ProviderCard` открывает `provider.launchUrl` через безопасную Electron-цепочку.
 
 Кнопки в `Header` и `ProviderCard` отрисовываются через общий компонент `src/app/components/UI/Button/Button.tsx`.
 
 ---
 
+## Electron bridge
+
+React-код не должен напрямую импортировать Electron API.
+
+Для app-specific действий использовать preload bridge.
+
+Текущий app-specific API:
+
+```ts
+window.aiCollector.openProviderUrl(url);
+```
+
+Он объявлен в:
+
+```txt
+electron/preload.ts
+electron/electron-env.d.ts
+```
+
+Main process обрабатывает IPC channel:
+
+```txt
+provider:open-url
+```
+
+Внешние ссылки открываются через `shell.openExternal`, предварительно проверяя, что URL имеет протокол `http:` или `https:`.
+
+Цепочка открытия ссылки:
+
+```txt
+ProviderCard → preload → main process → shell.openExternal
+```
+
+---
+
 ## Стили
 
-SCSS уже подключён.
+SCSS уже подключен.
 
 Базовая структура стилей:
 
@@ -214,23 +271,7 @@ import './app/styles/index.scss';
 
 Цвета задавать через CSS variables и `rgba`.
 
-В названиях цветов указывать прозрачность:
-
-```scss
---color-black-100: rgba(0, 0, 0, 1);
---color-black-80: rgba(0, 0, 0, 0.8);
---color-black-60: rgba(0, 0, 0, 0.6);
---color-black-10: rgba(0, 0, 0, 0.1);
---color-black-05: rgba(0, 0, 0, 0.05);
-
---color-white-100: rgba(255, 255, 255, 1);
---color-white-80: rgba(255, 255, 255, 0.8);
---color-white-96: rgba(255, 255, 255, 0.96);
-
---color-green-100: rgba(16, 163, 127, 1);
---color-green-80: rgba(16, 163, 127, 0.8);
---color-green-10: rgba(16, 163, 127, 0.1);
-```
+В названиях цветов указывать прозрачность.
 
 Общие расстояния, скругления и минимальная ширина также лежат в `variables.scss`:
 
@@ -255,186 +296,15 @@ import './app/styles/index.scss';
 
 ---
 
-## Electron
+## Проверки перед завершением coding task
 
-Папка `electron/` содержит main process и preload.
+Для задач с изменением кода запускать:
 
-```txt
-electron/main.ts
-electron/preload.ts
+```bash
+npm run build
+npm run lint
 ```
 
-React-код не должен напрямую импортировать Electron API.
+Для задач только с документацией достаточно проверить diff и при необходимости форматирование Markdown.
 
-Если renderer должен общаться с Electron/Node, делать это через preload.
-
----
-
-## Playwright
-
-Playwright использовать для:
-
-- открытия сайтов AI-сервисов;
-- работы с отдельными browser profiles;
-- сохранения и восстановления сессий;
-- проверки, авторизован ли пользователь;
-- полуавтоматических сценариев проверки кредитов.
-
-Не использовать Playwright для обхода капчи, скрытого ботинга или действий, которые требуют ручного подтверждения пользователя.
-
-Если нужен логин, капча или подтверждение — остановить автоматизацию и передать управление пользователю.
-
----
-
-## Основные принципы MVP
-
-1. Не хранить пароли пользователя.
-2. Один аккаунт = один browser profile.
-3. Один сервис = одна папка в `src/providers`.
-4. Пользовательские данные не хранить в Git.
-5. UI не должен напрямую читать и писать файлы.
-6. Все файловые операции должны идти через `src/core/storage`.
-7. Автоматизация должна быть полуавтоматической и безопасной.
-8. Если нужен логин, капча или подтверждение — передать управление пользователю.
-9. Не обходить капчу.
-10. Не делать скрытый ботинг.
-
----
-
-## Пользовательские данные
-
-Настоящие пользовательские данные должны храниться вне репозитория.
-
-macOS:
-
-```txt
-~/Library/Application Support/AI-collector/
-```
-
-Windows:
-
-```txt
-%APPDATA%/AI-collector/
-```
-
-Там будут:
-
-```txt
-accounts.json
-settings.json
-daily-checks.json
-profiles/
-sessions/
-```
-
-В Git можно хранить только примеры:
-
-```txt
-examples/accounts.example.json
-examples/provider.example.json
-```
-
----
-
-## Providers
-
-Каждый AI-сервис описывается папкой:
-
-```txt
-src/providers/kling/
-  provider.json
-```
-
-Позже рядом появятся:
-
-```txt
-automation.json
-selectors.json
-```
-
-Но пока `automation.json` и `selectors.json` не создавать, пока мы реально не дошли до автоматизации.
-
----
-
-## provider.json
-
-Текущий пример:
-
-```json
-{
-  "id": "kling",
-  "name": "Kling AI",
-  "categories": ["video"],
-  "websiteUrl": "https://klingai.com",
-  "launchUrl": "https://klingai.com"
-}
-```
-
-В `Provider` используется поле `categories`, а не `category`, потому что один AI-сервис может относиться к нескольким категориям.
-
----
-
-## Статусы аккаунта
-
-Позже использовать такие статусы:
-
-```ts
-type AccountStatus =
-  'not_connected' | 'connected' | 'session_expired' | 'manual_required' | 'error';
-```
-
----
-
-## Что не делать в MVP
-
-```txt
-Не делать сервер
-Не делать облачную синхронизацию
-Не делать оплату
-Не делать умный выбор нейросети
-Не подключать API AI-сервисов
-Не хранить логины и пароли
-Не автоматизировать обход капчи
-Не переносить структуру обратно в корень проекта
-Не создавать .prettierrc, .prettierignore, .editorconfig без необходимости
-Не подключать Redux/Zustand без реальной необходимости
-Не создавать data-папку ради временных моков
-```
-
----
-
-## Перед добавлением новых зависимостей
-
-Перед добавлением новых зависимостей нужно проверить:
-
-```txt
-package.json
-vite.config.ts
-tsconfig.json
-```
-
-Не предлагать установку несовместимых версий без анализа текущего стека.
-
----
-
-## Важное решение по Provider Registry
-
-Provider Registry пока не реализован кодом.
-
-Не импортировать `provider.json` напрямую в TypeScript как готовый `Provider`, потому что TypeScript читает JSON слишком широко: например, `categories` становится `string[]`, а не `ProviderCategory[]`.
-
-Не использовать `as Provider` или `as Provider['categories']` как основное архитектурное решение.
-
-Сейчас для UI используется временный массив провайдеров в `.ts`.
-
-Позже Provider Registry должен загружать JSON через отдельную функцию и валидировать данные перед преобразованием в `Provider`.
-
----
-
-## Текущий фокус для агента
-
-Первый Dashboard и Header уже приняты и слиты в `main`.
-
-Дальше двигаться маленькими UI-шагами от текущего Dashboard.
-
-Пока не переходить к Provider Registry, Playwright, аккаунтам, storage и Electron IPC без отдельной задачи.
+`npm run build` может потребовать доступ к сети для скачивания Electron.

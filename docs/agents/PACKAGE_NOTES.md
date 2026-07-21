@@ -26,6 +26,8 @@ Dev-сервер и сборщик frontend-части проекта.
 
 Инструмент для сборки desktop-приложения в дистрибутив.
 
+`npm run build` создает результат в `release/`.
+
 ### vite-plugin-electron
 
 Связывает Electron main process с Vite.
@@ -139,7 +141,7 @@ npm install -D sass-embedded
 
 - использовать SCSS в глобальных стилях;
 - использовать CSS Modules + SCSS для компонентов;
-- постепенно развивать дизайн-систему без тяжёлой UI-библиотеки;
+- постепенно развивать дизайн-систему без тяжелой UI-библиотеки;
 - не подключать Tailwind, Styled Components, Emotion, MUI или Ant Design на старте.
 
 Текущий подход к стилям:
@@ -203,3 +205,17 @@ npm audit fix --force
 ```
 
 `--force` может обновить зависимости до несовместимых версий и сломать Electron/Vite-шаблон.
+
+---
+
+## Текущие предупреждения сборки
+
+`npm run build` может завершаться успешно, но показывать предупреждения:
+
+- Sass `legacy-js-api`;
+- нет `description` в `package.json`;
+- нет `author` в `package.json`;
+- не задан application icon;
+- macOS code signing может быть пропущен.
+
+Это не блокеры для текущего этапа.

@@ -76,7 +76,57 @@ npm install dotenv
 npm install -D sass-embedded
 ```
 
-После установки SCSS был подключён, и приложение успешно открылось через `npm run dev`.
+После установки SCSS был подключен, и приложение успешно открывалось через `npm run dev`.
+
+---
+
+## Основные команды
+
+```bash
+npm run dev
+```
+
+Запуск приложения в режиме разработки.
+
+```bash
+npm run build
+```
+
+Проверка TypeScript, сборка Vite и сборка Electron-приложения.
+
+```bash
+npm run lint
+```
+
+Проверка кода ESLint.
+
+```bash
+npm test
+```
+
+Запуск всех текущих тестов.
+
+```bash
+npm run test:button
+```
+
+Запуск теста компонента `Button`.
+
+---
+
+## Текущие предупреждения build
+
+`npm run build` может пройти успешно, но показать предупреждения:
+
+- Sass `legacy-js-api`;
+- нет `description` в `package.json`;
+- нет `author` в `package.json`;
+- не задан app icon;
+- macOS code signing может быть пропущен.
+
+Это не ошибки.
+
+Если Electron еще не скачан в локальный кэш, `electron-builder` может скачивать его с GitHub.
 
 ---
 
@@ -97,9 +147,9 @@ npm install -D sass-embedded
 
 ---
 
-## Что нужно поправить в package.json
+## package.json
 
-В `package.json` должен быть блок:
+В `package.json` уже есть блок:
 
 ```json
 "prettier": {
@@ -112,23 +162,19 @@ npm install -D sass-embedded
 }
 ```
 
----
+Отдельного `npm run format` сейчас нет. Для форматирования можно использовать:
 
-## Что нужно добавить в .gitignore
-
-В `.gitignore` должны быть:
-
-```gitignore
-dist-electron
-out
-coverage
-playwright-report
-test-results
-.env
-.env.*
+```bash
+npx prettier . --write
 ```
 
-Можно оставить существующие строки шаблона, просто добавить недостающие.
+---
+
+## .gitignore
+
+В `.gitignore` уже добавлены сборки, отчеты тестов, env-файлы и `release/`.
+
+`release/` появляется после `npm run build` и не должен попадать в Git.
 
 ---
 
@@ -157,6 +203,7 @@ src/app/components/ProviderCard/ProviderCard.module.scss
 
 src/assets/SV{}ISOROKI.svg
 src/providers/index.ts
+src/providers/kling/provider.json
 ```
 
 Dashboard уже показывает:
@@ -170,6 +217,24 @@ Dashboard уже показывает:
 
 Кнопки в шапке и карточке провайдера используют общий компонент `Button`.
 
+Кнопка `Open` в карточке открывает `provider.launchUrl` через безопасный Electron bridge.
+
+---
+
+## Electron bridge
+
+Для связи React и Electron используется `electron/preload.ts`.
+
+Текущий app-specific API:
+
+```ts
+window.aiCollector.openProviderUrl(url);
+```
+
+Он используется для открытия внешних ссылок AI-сервисов.
+
+В main process добавлен IPC handler `provider:open-url`, который открывает только `http`/`https` ссылки через системный браузер.
+
 ---
 
 ## Стили
@@ -182,7 +247,7 @@ Dashboard уже показывает:
 src/app/styles/index.scss
 ```
 
-Он должен быть подключён в `src/main.tsx`:
+Он должен быть подключен в `src/main.tsx`:
 
 ```ts
 import './app/styles/index.scss';
@@ -190,34 +255,9 @@ import './app/styles/index.scss';
 
 Цвета делаем минималистичные, в духе ChatGPT.
 
-Цвета задаём через `rgba` и CSS variables.
+Цвета задаем через `rgba` и CSS variables.
 
-Пример:
-
-```scss
---color-black-100: rgba(0, 0, 0, 1);
---color-black-80: rgba(0, 0, 0, 0.8);
---color-black-60: rgba(0, 0, 0, 0.6);
---color-black-10: rgba(0, 0, 0, 0.1);
---color-black-05: rgba(0, 0, 0, 0.05);
-```
-
-Общие отступы, скругления и минимальная ширина приложения лежат в `variables.scss`:
-
-```scss
---radius-md: 12px;
---radius-lg: 16px;
---radius-pill: 999px;
-
---space-xs: 4px;
---space-sm: 8px;
---space-control-sm: 12px;
---space-md: 16px;
---space-lg: 24px;
---space-xl: 32px;
-
---app-min-width: 360px;
-```
+Общие отступы, скругления и минимальная ширина приложения лежат в `variables.scss`.
 
 Минимальная ширина приложения — 360px.
 
@@ -231,8 +271,6 @@ functions.scss
 ---
 
 ## Создание структуры папок
-
-Раньше обсуждалась команда создания всей структуры заранее. Сейчас правило изменено.
 
 Не создавать все будущие папки заранее.
 
@@ -258,87 +296,3 @@ src/assets/
 ```txt
 ~/Library/Application Support/AI-collector/
 ```
-
-В Git можно хранить только примеры:
-
-```txt
-examples/accounts.example.json
-examples/provider.example.json
-```
-
----
-
-## Проверка после изменений
-
-После значимых изменений запускать:
-
-```bash
-npm run dev
-```
-
-Если приложение открывается — всё нормально.
-
----
-
-## Что делать при предупреждении npm audit
-
-После установки пакетов npm может показывать:
-
-```txt
-8 vulnerabilities
-```
-
-Пока не запускать:
-
-```bash
-npm audit fix --force
-```
-
-`--force` может обновить зависимости до несовместимых версий и сломать Electron/Vite шаблон.
-
-Сначала достаточно просто продолжать разработку.
-
----
-
-## Если автоформатирование VS Code не работает
-
-Проверить:
-
-1. npm-пакет установлен:
-
-```bash
-npx prettier --version
-```
-
-2. Расширение VS Code установлено:
-
-```txt
-Prettier - Code formatter
-ID: esbenp.prettier-vscode
-```
-
-3. В VS Code включено:
-
-```txt
-Format On Save
-Default Formatter: Prettier - Code formatter
-```
-
-4. Если расширение Biome пишет ошибку:
-
-```txt
-Unable to find the Biome binary
-```
-
-то Biome нужно отключить для этого проекта. Мы его сейчас не используем.
-
----
-
-## Следующий шаг
-
-Продолжать развивать Dashboard маленькими UI-шагами:
-
-- не переходить к Provider Registry без отдельной задачи;
-- не подключать Playwright, аккаунты, storage и Electron IPC без отдельной задачи;
-- после изменений запускать `npm run dev`;
-- перед завершением coding-задачи запускать `npm run build` и `npm run lint`, если они доступны.
