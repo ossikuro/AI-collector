@@ -22,3 +22,9 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
   // You can expose other APTs you need here.
   // ...
 })
+
+contextBridge.exposeInMainWorld('providerApi', {
+  open(providerId: string, launchUrl: string) {
+    return ipcRenderer.invoke('provider:open', providerId, launchUrl)
+  },
+})

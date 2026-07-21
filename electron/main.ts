@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 
@@ -23,6 +23,16 @@ export const RENDERER_DIST = path.join(process.env.APP_ROOT, 'dist')
 process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, 'public') : RENDERER_DIST
 
 let win: BrowserWindow | null
+
+async function openProviderInBrowser(launchUrl: string) {
+  const url = new URL(launchUrl)
+
+  if (url.protocol !== 'https:') {
+    throw new Error('Provider URL must use HTTPS')
+  }
+
+  await shell.openExternal(url.toString())
+}
 
 function createWindow() {
   win = new BrowserWindow({
@@ -63,4 +73,10 @@ app.on('activate', () => {
   }
 })
 
-app.whenReady().then(createWindow)
+app.whenReady().then(() => {
+  ipcMain.handle('provider:open', (_event, _providerId: string, launchUrl: string) => {
+    return openProviderInBrowser(launchUrl)
+  })
+
+  createWindow()
+})

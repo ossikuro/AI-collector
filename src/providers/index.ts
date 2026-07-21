@@ -6,6 +6,6 @@ export const providers: Provider[] = [
     name: 'Kling AI',
     categories: ['video'],
     websiteUrl: 'https://klingai.com',
-    launchUrl: 'https://klingai.com',
+    launchUrl: 'https://app.klingai.com/global/',
   },
 ];

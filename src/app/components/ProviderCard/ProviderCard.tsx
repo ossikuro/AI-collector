@@ -7,6 +7,10 @@ interface ProviderCardProps {
 }
 
 export function ProviderCard({ provider }: ProviderCardProps) {
+  const openProvider = () => {
+    void window.providerApi.open(provider.id, provider.launchUrl);
+  };
+
   return (
     <article className={styles.card}>
       <div className={styles.content}>
@@ -22,7 +26,7 @@ export function ProviderCard({ provider }: ProviderCardProps) {
         </div>
         <div className={styles.status}>Not connected</div>
       </div>
-      <Button buttonStyle="CTA" className={styles.button} size="L">
+      <Button buttonStyle="CTA" className={styles.button} onClick={openProvider} size="L">
         Open
       </Button>
     </article>
