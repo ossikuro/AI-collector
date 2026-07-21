@@ -184,7 +184,9 @@ electron/main.ts
 
 - создание окна приложения;
 - жизненный цикл Electron;
-- настройки BrowserWindow.
+- настройки BrowserWindow;
+- обработку IPC-команды `provider:open`;
+- проверку HTTPS-ссылки и её открытие в системном браузере через `shell.openExternal`.
 
 ```txt
 electron/preload.ts
@@ -193,6 +195,8 @@ electron/preload.ts
 Безопасный мост между Electron main process и React renderer.
 
 React-код не должен напрямую импортировать Electron API. Взаимодействие должно идти через preload.
+
+Сейчас preload предоставляет `window.providerApi.open(providerId, launchUrl)` для кнопки провайдера.
 
 ---
 
@@ -412,9 +416,10 @@ ProviderCard.module.scss
 - название сервиса;
 - категории;
 - статус;
-- кнопку `Open` через общий `Button`.
+- кнопку `Open` через общий `Button`;
+- вызов `window.providerApi.open` с `provider.id` и `provider.launchUrl`.
 
-Кнопка пока без действия.
+Ссылка открывается в системном браузере. Поэтому используется авторизация активного профиля браузера, а не отдельная Electron-сессия.
 
 ---
 
@@ -486,7 +491,7 @@ src/providers/kling/
   "name": "Kling AI",
   "categories": ["video"],
   "websiteUrl": "https://klingai.com",
-  "launchUrl": "https://klingai.com"
+  "launchUrl": "https://app.klingai.com/global/"
 }
 ```
 

@@ -184,7 +184,7 @@ src/providers/index.ts
 - список карточек провайдеров;
 - карточку Kling.
 
-Кнопки и поиск пока без действий.
+Поиск и кнопки `Header` пока без действий. Кнопка `Open` в `ProviderCard` открывает `provider.launchUrl` в системном браузере через preload и Electron IPC.
 
 Кнопки в `Header` и `ProviderCard` отрисовываются через общий компонент `src/app/components/UI/Button/Button.tsx`.
 
@@ -267,6 +267,14 @@ electron/preload.ts
 React-код не должен напрямую импортировать Electron API.
 
 Если renderer должен общаться с Electron/Node, делать это через preload.
+
+Уже реализован минимальный мост `window.providerApi.open(providerId, launchUrl)`:
+
+- `ProviderCard` вызывает API при клике по `Open`;
+- `electron/preload.ts` отправляет сообщение `provider:open`;
+- `electron/main.ts` проверяет, что URL использует HTTPS, и открывает его через `shell.openExternal`;
+- используется системный браузер и его текущая авторизация;
+- приложение не сохраняет пароль или cookies провайдера.
 
 ---
 
@@ -366,7 +374,7 @@ selectors.json
   "name": "Kling AI",
   "categories": ["video"],
   "websiteUrl": "https://klingai.com",
-  "launchUrl": "https://klingai.com"
+  "launchUrl": "https://app.klingai.com/global/"
 }
 ```
 
@@ -437,4 +445,4 @@ Provider Registry пока не реализован кодом.
 
 Дальше двигаться маленькими UI-шагами от текущего Dashboard.
 
-Пока не переходить к Provider Registry, Playwright, аккаунтам, storage и Electron IPC без отдельной задачи.
+Пока не переходить к Provider Registry, Playwright, аккаунтам и storage без отдельной задачи. Базовый Electron IPC для кнопки `Open` уже реализован.
